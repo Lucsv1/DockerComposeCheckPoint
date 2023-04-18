@@ -1,24 +1,18 @@
-#imagem
-FROM node:alpine
+# Use a imagem oficial do Node.js como base
+FROM alpine:3.14
 
-#Definindo Usuario
-RUN adduser -D -g 'admdimdim' apiuser
-USER apiuser
-
-#Definindo o diretorio de trabalho na imagem
+# Defina o diretório de trabalho dentro do container
 WORKDIR /app
 
-#Copiando os arquivos de packe.json
-COPY package*.json ./
+# Copie os arquivos do aplicativo para o diretório de trabalho
+COPY package.json .
+COPY index.js ./
 
-#INstalando dependencias da aplicação
+# Instale as dependências do aplicativo
 RUN npm install
 
-#Copiando codigo fonte da aplicação para imagem
-COPY . .
+# Exponha a porta do aplicativo
+EXPOSE 8080
 
-#expondo a porta 
-EXPOSE 3000
-
-#comando de incialização
-CMD ["npm", "start "]
+# Inicie o aplicativo
+CMD ["node", "index.js"]

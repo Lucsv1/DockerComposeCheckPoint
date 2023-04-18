@@ -1,16 +1,8 @@
 version: '3'
 services:
-  db:
-    image: oracle/database:12.2.0.1-ee
-    environment:
-      - ORACLE_PWD=210104
-    ports:
-      - "1521:1521"
-    volumes:
-      - ./data:/opt/oracle/oradata
   api:
     build: ./api
     ports:
-      - "3000:3000"
-    depends_on:
-      - db
+      - "8080:8080"
+  db:
+    build: ./db
