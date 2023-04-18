@@ -1,8 +1,19 @@
 version: '3'
 services:
-  api:
-    build: ./api
-    ports:
-      - "8080:8080"
   db:
-    build: ./db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: 
+      POSTGRES_PASSWORD: <senha_do_banco_de_dados>
+      POSTGRES_DB: <nome_do_banco_de_dados>
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  app:
+    build: .
+    volumes:
+      - ./app:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
