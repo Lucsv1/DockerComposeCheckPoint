@@ -1,20 +1,12 @@
-import psycopg2
+from flask import Flask
+import os
 
-conn = psycopg2.connect(
-    dbname="PostgreSQL",
-    user="RM95177",
-    password="210104",
-    host="db",  # Nome do serviço do banco de dados definido no docker-compose.yml
-    port=5432  # Porta padrão do PostgreSQL
-)
+app = Flask(__name__)
+port = int(os.environ.get("PORT", 5000))
 
-cur = conn.cursor()
+@app.route('/')
+def home():
+	return 'Aplicação Flask Dockerizada'
 
-cur.execute("""
-    CREATE TABLE tarefas (
-        id SERIAL PRIMARY KEY,
-        titulo VARCHAR(255),
-        descricao VARCHAR(255)
-    )
-""")
-conn.commit()
+if __name__ == '__main__':
+	app.run(host='0.0.0.0',port=port,debug=True)

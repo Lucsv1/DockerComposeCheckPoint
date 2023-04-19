@@ -1,19 +1,43 @@
 version: '3'
 services:
-  db:
+  db: 
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: 
-      POSTGRES_PASSWORD: <senha_do_banco_de_dados>
-      POSTGRES_DB: <nome_do_banco_de_dados>
+      POSTGRES_USER: RM95177
+      POSTGRES_PASSWORD: 210104
+      POSTGRES_DB: db
     volumes:
       - ./data:/var/lib/postgresql/data
-  app:
-    build: .
-    volumes:
-      - ./app:/app
-    ports:
-      - "5000:5000"
-    depends_on:
-      - db
+  flaskapp:
+
+   # Constrói a imagem para o Container com o Dockerfile que está no Diretório web
+   build: ./app
+
+   # Sempre reinicia o Container caso ocorra algum problema (tenta indefinidamente)
+   restart: always
+
+   # Expõem a porta 8000 para outros Containers (não para o Host da máquina)
+   expose:
+     - "8000"
+
+   # Monta um Volume Anônimo no diretório web apontando para a pasta do Container: /home/flask/app/web
+   volumes:
+     - ./web:/home/flask/app/web
+
+   networks:
+     - web_network
+
+   # Não cria esse Container até os Containers redis e postgres serem criados
+   depends_on:
+     - postgres
+   
+   # Realiza o Link com os Containers redis e postgres, abilitando a comunicação entre eles
+   #links:
+   #  - redis
+   #  - postgres
+
+   # Passa uma variável de ambiente para o Container (esse level de debug mostra mais informações úteis)
+   environment:
+     FLASK_DEBUG: 1
+
